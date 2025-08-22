@@ -1,5 +1,6 @@
 import AddQuestionForm from '@/components/questions/add-question-form';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
 	Sheet,
 	SheetContent,
@@ -18,7 +19,9 @@ export default function Home() {
 				<SheetContent className='px-4'>
 					<SheetTitle>Add Question</SheetTitle>
 					<SheetDescription></SheetDescription>
-					<AddQuestionForm />
+					<ScrollArea className='w-full'>
+						<AddQuestionForm />
+					</ScrollArea>
 				</SheetContent>
 			</Sheet>
 		</div>

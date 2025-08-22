@@ -1,14 +1,17 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { Check, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
 
 export default function AnswerGenerator({
-	onGenerated
+	onGenerated,
+	onSetAnswer
 }: {
 	onGenerated: (answers: string[]) => void;
+	onSetAnswer?: (answer: string) => void;
 }) {
 	const [answers, setAnswers] = useState<string[]>([]);
 	const ref = useRef<HTMLTextAreaElement>(null);
@@ -25,7 +28,7 @@ export default function AnswerGenerator({
 				<Button
 					onClick={(e) => {
 						e.preventDefault();
-						if (ref.current) {
+						if (ref.current && ref.current.value.trim() !== '') {
 							setAnswers([...answers, ref.current.value]);
 							ref.current.value = '';
 						}
@@ -34,16 +37,38 @@ export default function AnswerGenerator({
 				</Button>
 			</div>
 
-			<div className='flex flex-col gap-2'>
-				<ul className='px-2'>
+			<div className='flex flex-col gap-2 w-full'>
+				<div className='px-2 w-full flex flex-col gap-2'>
 					{answers.map((answer) => (
-						<li
-							className='list-disc'
-							key={answer}>
-							{answer}
-						</li>
+						<div
+							key={answer}
+							className='flex flex-row items-center justify-between gap-2 w-full'>
+							<li className='list-disc w-full'>{answer}</li>
+
+							<Button
+								onClick={(e) => {
+									e.preventDefault();
+
+									setAnswers(answers.filter((a) => a !== answer));
+								}}
+								variant={'secondary'}
+								size={'icon'}>
+								<X className='text-red-600' />
+							</Button>
+
+							<Button
+								onClick={(e) => {
+									e.preventDefault();
+
+									onSetAnswer?.(answer);
+								}}
+								variant={'secondary'}
+								size={'icon'}>
+								<Check className='text-green-600' />
+							</Button>
+						</div>
 					))}
-				</ul>
+				</div>
 			</div>
 
 			<Button

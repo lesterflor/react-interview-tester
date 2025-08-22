@@ -30,6 +30,7 @@ export default function AddQuestionForm() {
 	});
 
 	const [generatedAnswers, setGeneratedAnswers] = useState<string[]>([]);
+	const [questionAnswer, setQuestionAnswer] = useState('');
 
 	const onSubmit: SubmitHandler<z.infer<typeof questionSchema>> = async (
 		data: z.infer<typeof questionSchema>
@@ -40,6 +41,7 @@ export default function AddQuestionForm() {
 			toast.success('Question created successfully');
 			form.reset();
 			setGeneratedAnswers([]);
+			setQuestionAnswer('');
 		} else {
 			toast.error(`Error: ${res.message}`);
 		}
@@ -48,7 +50,7 @@ export default function AddQuestionForm() {
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)}>
-				<div className='flex flex-col gap-4 items-center w-full'>
+				<div className='flex flex-col gap-4 items-center w-full max-h-[75vh]'>
 					<div className='w-full'>
 						<FormField
 							name='question'
@@ -96,6 +98,10 @@ export default function AddQuestionForm() {
 												form.setValue('possibleAnswers', answers);
 												setGeneratedAnswers(answers);
 											}}
+											onSetAnswer={(answer) => {
+												form.setValue('answer', answer);
+												setQuestionAnswer(answer);
+											}}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -103,21 +109,32 @@ export default function AddQuestionForm() {
 							)}
 						/>
 
-						<div className='flex flex-col gap-2 items-center'>
-							<div>Possible Answers</div>
-							<ul className='w-full text-xs px-2'>
-								{generatedAnswers.map((answer) => (
-									<li
-										className='list-disc'
-										key={answer}>
-										{answer}
-									</li>
-								))}
-							</ul>
-						</div>
+						{generatedAnswers.length > 0 && (
+							<div className='flex flex-col gap-2 items-center w-full'>
+								<div className='text-xs'>Choices</div>
+								<div className='w-full text-sm p-2 border-2 rounded-md'>
+									{generatedAnswers.map((answer) => (
+										<li
+											className='list-disc'
+											key={answer}>
+											{answer}
+										</li>
+									))}
+								</div>
+							</div>
+						)}
 					</div>
 
-					<div className='w-full'>
+					{questionAnswer && (
+						<div className='w-full flex flex-col gap-2 items-center text-sm'>
+							<div>Answer:</div>
+							<div>
+								<b className='text-green-600'>{questionAnswer}</b>
+							</div>
+						</div>
+					)}
+
+					{/* <div className='w-full'>
 						<FormField
 							control={form.control}
 							name='answer'
@@ -140,7 +157,7 @@ export default function AddQuestionForm() {
 								</FormItem>
 							)}
 						/>
-					</div>
+					</div> */}
 
 					<div className='flex flex-row items-end justify-end w-full'>
 						<Button
