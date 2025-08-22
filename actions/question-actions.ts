@@ -31,3 +31,18 @@ export async function createQuestion(data: Question) {
 		};
 	}
 }
+
+export async function getQuestions() {
+	try {
+		const questions = await prisma.question.findMany();
+		return {
+			success: true,
+			data: questions
+		};
+	} catch (err: unknown) {
+		return {
+			success: false,
+			message: formatError(err)
+		};
+	}
+}

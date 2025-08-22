@@ -1,3 +1,4 @@
+import { StoreProvider } from '@/components/StoreProvider';
 import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
 import './globals.css';
@@ -15,7 +16,8 @@ export default function RootLayout({
 	return (
 		<html lang='en'>
 			<body>
-				{children}
+				<StoreProvider>{children}</StoreProvider>
+
 				<Toaster
 					expand={true}
 					richColors

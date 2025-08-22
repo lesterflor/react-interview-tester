@@ -1,4 +1,5 @@
 import AddQuestionForm from '@/components/questions/add-question-form';
+import QuestionsList from '@/components/questions/questions-list';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -24,6 +25,10 @@ export default function Home() {
 					</ScrollArea>
 				</SheetContent>
 			</Sheet>
+
+			<div className='px-4'>
+				<QuestionsList />
+			</div>
 		</div>
 	);
 }

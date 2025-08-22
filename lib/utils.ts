@@ -173,3 +173,8 @@ export function addOneDay(date: Date) {
 	dateCopy.setDate(date.getDate() + 1);
 	return dateCopy;
 }
+
+export function getAlphaIndx(indx: number) {
+	const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	return alphabet[indx % alphabet.length];
+}
