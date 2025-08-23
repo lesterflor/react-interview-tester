@@ -2,19 +2,32 @@
 
 import { getQuestions } from '@/actions/question-actions';
 import {
+	selectAnswerData,
+	selectAnswerStatus
+} from '@/lib/features/answers/answerSlice';
+import {
 	selectData,
 	selectStatus
 } from '@/lib/features/questions/questionSlice';
 import { useAppSelector } from '@/lib/hooks';
-import { getAlphaIndx } from '@/lib/utils';
 import { GetQuestion } from '@/types';
 import { useEffect, useMemo, useState } from 'react';
+import QuestionCard from './question-card';
 
 export default function QuestionsList() {
 	const questionsData = useAppSelector(selectData);
 	const questionStatus = useAppSelector(selectStatus);
+	const answersData = useAppSelector(selectAnswerData);
+	const answersStatus = useAppSelector(selectAnswerStatus);
 
 	const [questions, setQuestions] = useState<GetQuestion[]>([]);
+	const [answeredQuestions, setAnsweredQuestions] = useState(0);
+
+	useEffect(() => {
+		if (answersStatus === 'answered') {
+			setAnsweredQuestions((prev) => prev + 1);
+		}
+	}, [answersData, answersStatus]);
 
 	const fetchQuestions = async () => {
 		const res = await getQuestions();
@@ -33,28 +46,22 @@ export default function QuestionsList() {
 
 	const questionsItems = useMemo(() => {
 		return questions.map((item, indx) => (
-			<div
+			<QuestionCard
 				key={item.id}
-				className='flex flex-col gap-2 items-start pb-4'>
-				<div>
-					{indx + 1}.{' '}
-					<span className='font-semibold text-lg leading-tight'>
-						{item.question}
-					</span>
-				</div>
-				<div>
-					{item.possibleAnswers.map((answer, indx) => (
-						<div
-							className='flex flex-row gap-2'
-							key={answer}>
-							<div>{getAlphaIndx(indx)}.</div>
-							<div>{answer}</div>
-						</div>
-					))}
-				</div>
-			</div>
+				question={item}
+				index={indx}
+			/>
 		));
 	}, [questions]);
 
-	return <div>{questionsItems}</div>;
+	return (
+		<div className='relative flex flex-col gap-4 items-center'>
+			<div>
+				<span className='font-semibold'>
+					Answered Questions: {answeredQuestions} / {questions.length}
+				</span>
+			</div>
+			<div>{questionsItems}</div>
+		</div>
+	);
 }
